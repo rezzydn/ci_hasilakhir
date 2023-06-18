@@ -10,7 +10,28 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-2 page-title">Halaman <?=$title?></h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="mt-2 page-title">Halaman Pengaturan Jadwal Seminar Hasil</h2>
+                    </div>
+                <?php if(has_permission('admin') || has_permission('dosen')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Pengaturan Jadwal Seminar Hasil</li>
+                        </ol>
+                    </div>
+                    <?php elseif(has_permission('mahasiswa')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Pengaturan Jadwal Seminar Hasil</li>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
+                </div>
                 <div class="row my-4">
                     <!-- Small table -->
                     <div class="col">
@@ -24,57 +45,8 @@
                                 <form method="POST" enctype="multipart/form-data" 
                                 action="<?=base_url("simta/seminarhasil/update/" . $seminarhasil->id_seminarhasil)?>">
                                 <?=csrf_field(); ?>
-                                <div class="form-group mb-3">
-                                        <label for="simple-select1">Nama Mahasiswa</label>
-                                        <select
-                                            class="form-control <?= ($validation->hasError('id_mhs')) ? 'is-invalid' : ''; ?>"
-                                            name="id_mhs">
-                                            <option value="">Pilih Mahasiswa</option>
-                                            <?php foreach ($mahasiswa as $m) : ?>
-                                            <option value="<?= $m->id_mhs ?>"
-                                                <?= ($seminarhasil->id_mhs == $m->id_mhs) ? 'selected' : '' ?>>
-                                                <?= $m->nama ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            <?= $validation->getError('id_mhs'); ?>
-                                        </div>
-                                    </div>
                                     <div class="form-group mb-3">
-                                        <label for="example-select">Nama Dosen Pembimbing</label>
-                                        <select name="id_staf"
-                                            class="form-control <?= ($validation->hasError('id_staf')) ? 'is-invalid' : ''; ?>">
-                                            <option>Pilih Dosen Pembimbing</option>
-                                            <?php foreach ($staf as $s) : ?>
-                                            <option value="<?= $s->id_staf ?>"
-                                                <?= ($seminarhasil->id_staf) == $s->id_staf ? 'selected' : '' ?>>
-                                                <?= $s->nama ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            <?= $validation->getError('id_staf'); ?>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="nama_judul">Judul Tugas Akhir</label>
-                                        <input type="text" id="nama_judul" name="nama_judul" class="form-control <?=($validation->hasError('nama_judul')) ? 'is-invalid' : ''?>" value="<?=$seminarhasil->nama_judul?>" placeholder="Masukkan Judul Tugas Akhir" />
-                                        <!-- Error Validation -->
-                                        <div class="invalid-feedback">
-                                            <?=$validation->getError('nama_judul');?>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="abstrak">Abstrak</label>
-                                        <input type="text" id="abstrak" name="abstrak" class="form-control <?=($validation->hasError('abstrak')) ? 'is-invalid' : ''?>" value="<?=$seminarhasil->abstrak?>" placeholder="Masukkan Judul Tugas Akhir" />
-                                        <!-- Error Validation -->
-                                        <div class="invalid-feedback">
-                                            <?=$validation->getError('abstrak');?>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="ruang_semhas">Ruangan Ujian</label>
+                                        <label for="ruang_semhas">Ruangan Seminar Hasil<span class="text-danger">*</span></label>
                                         <input type="text" id="ruang_semhas" name="ruang_semhas" class="form-control <?=($validation->hasError('ruang_semhas')) ? 'is-invalid' : ''?>" value="<?=$seminarhasil->ruang_semhas?>" />
                                         <!-- Error Validation -->
                                         <div class="invalid-feedback">
@@ -82,12 +54,52 @@
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="jadwal_semhas">Jadwal Seminar Hasil</label>
-                                        <input type="text" id="jadwal_semhas" name="jadwal_semhas" class="form-control <?=($validation->hasError('jadwal_semhas')) ? 'is-invalid' : ''?>" value="<?=$seminarhasil->jadwal_semhas?>" />
+                                        <label for="tanggal">Tanggal Ujian<span class="text-danger">*</span></label>
+                                        <input type="date" id="jadwal_semhas" name="jadwal_semhas"
+                                            class="form-control <?=($validation->hasError('jadwal_semhas')) ? 'is-invalid' : ''?>"
+                                            value="<?=date('Y-m-d',round($seminarhasil->jadwal_semhas/1000))?>" />
                                         <!-- Error Validation -->
                                         <div class="invalid-feedback">
                                             <?=$validation->getError('jadwal_semhas');?>
                                         </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="jam_mulai">Jam Mulai<span class="text-danger">*</span></label>
+                                        <input type="time" id="jam_mulai" name="jam_mulai"
+                                            class="form-control <?=($validation->hasError('jam_mulai')) ? 'is-invalid' : ''?>"
+                                            value="<?=date('H:i', round($seminarhasil->jam_mulai/1000))?>" />
+                                        <!-- Error Validation -->
+                                        <div class="invalid-feedback">
+                                            <?=$validation->getError('jam_mulai');?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="jam_selesai">Jam Selesai<span class="text-danger">*</span></label>
+                                        <input type="time" id="jam_selesai" name="jam_selesai"
+                                            class="form-control <?=($validation->hasError('jam_selesai')) ? 'is-invalid' : ''?>"
+                                            value="<?=date('H:i', round($seminarhasil->jam_selesai/1000))?>" />
+                                        <!-- Error Validation -->
+                                        <div class="invalid-feedback">
+                                            <?=$validation->getError('jam_selesai');?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="simple-select2">Hasil<span class="text-danger">*</span></label>
+                                        <select class="form-control select2" name="status_ajuan"
+                                            id="simple-select2">
+                                            <option value="">Pilih Hasil</option>
+                                            <option value="diterima"
+                                                <?= $seminarhasil->status_ajuan == 'diterima' ? 'selected' : ''?>>
+                                                DITERIMA</option>
+                                            <option value="pending"
+                                                <?= $seminarhasil->status_ajuan == 'pending' ? 'selected' : ''?>>
+                                                PENDING</option>
+                                            <option value="ditolak"
+                                                <?= $seminarhasil->status_ajuan == 'ditolak' ? 'selected' : ''?>>
+                                                DITOLAK</option>
+                                        </select>
+                                        <!-- Error Validation -->
+
                                     </div>
                                     <button class="btn btn-primary" type="submit">
                                         Edit

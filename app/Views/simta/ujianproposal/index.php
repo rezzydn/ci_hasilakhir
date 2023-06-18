@@ -5,33 +5,46 @@
 <?php else : ?>
 <?php echo $this->include('simta/simta_partial/dashboard/side_menu') ?>
 <?php endif; ?>
+
 <main role="main" class="main-content">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-2 page-title">Halaman Pengelolaan Data Ujian Proposal</h2>
-                <p class="card-text">
-                    Halaman Pendaftaran Ujian Proposal
-                </p>
-                <?php
-                    if(session()->getFlashData('status')){
-                ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= session()->getFlashData('status') ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <?php
+                            if(has_permission('admin') || has_permission('dosen')) {
+                                echo '<h2 class="mt-2 page-title">Halaman Pengelolaan Ujian Proposal</h2>';
+                            } else {
+                                echo '<h2 class="mt-2 page-title">Halaman Pendaftaran Ujian Proposal</h2>';
+                            }
+                        ?>
+                    </div>
+                    <?php if(has_permission('admin') || has_permission('dosen')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Pengelolaan Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php elseif(has_permission('mahasiswa')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Pendaftaran Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php
-                    }
-                    ?>
-                <div class="row my-4">
+                <div class="row my-3">
                     <!-- Small table -->
                     <div class="col-md-12">
                         <div class="card shadow">
                             <div class="card-body">
                                 <!-- table -->
-                                <?php if(has_permission('admin') || has_permission('mahasiswa')) : ?>
+                                <?php if(has_permission('mahasiswa')) : ?>
                                 <a href="<?=base_url('simta/ujianproposal/tambah');?>" class="btn btn-primary mb-3">Tambah</a>
                                 <?php endif; ?>
                                 <table class="table datatables" id="dataTable-1">
@@ -42,7 +55,7 @@
                                                 <th>Nama Mahasiswa</th>
                                             <?php endif; ?>
                                             <?php if(has_permission('admin') || has_permission('mahasiswa')) : ?>
-                                                <th>Nama Dosen Penguji</th>
+                                                <th>Nama Dosen Pembimbng</th>
                                             <?php endif; ?>
                                             <?php if(has_permission('admin') || has_permission('dosen')): ?>
                                                 <th>NIM</th>
@@ -51,8 +64,8 @@
                                                 <th>Kelas</th>
                                             <?php endif; ?>
                                             <th>Nama Judul</th>
-                                            <th>Status</th>
-                                            <th>File</th>
+                                            <th>Hasil</th>
+                                            <th>Status Pengajuan</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -76,29 +89,36 @@
                                                     <?php foreach($mahasiswa as $mhs) {
                                                     echo ($up1->id_mhs == $mhs->id_mhs) ? $mhs->nim : ''; } ?>
                                                 </td>
+                                                <td>
+                                                    <?php foreach($mahasiswa as $mhs) {
+                                                    echo ($up1->id_mhs == $mhs->id_mhs) ? $mhs->kelas : ''; } ?>
+                                                </td>
 
                                                 <td><?=$up1->nama_judul?></td>
                                                 <td>
-                                                    <?php if ($up1->status_up == ''): ?>
-                                                    <span class="badge badge-info">DIAJUKAN</span>
+                                                    <?php if ($up1->status_up == 'DIAJUKAN'): ?>
+                                                    <span class="badge badge-warning"><?=$up1->status_up?></span>
                                                     <?php else: ?>
                                                     <?php if ($up1->status_up == 'LULUS') {?>
                                                     <span class="badge badge-success"><?=$up1->status_up?></span>
                                                     <?php } else if ($up1->status_up == 'LULUS DENGAN REVISI') {?>
-                                                    <span class="badge badge-warning"><?=$up1->status_up?></span> 
+                                                    <span class="badge badge-info"><?=$up1->status_up?></span> 
                                                     <?php } else {?>
                                                     <?php } if ($up1->status_up == 'GAGAL') {?>
                                                     <span class="badge badge-danger"><?=$up1->status_up?></span>
                                                     <?php }?>
                                                     <?php endif; ?>
+                                                </td>
                                                 <td>
-                                                    <?php if ($up1->proposalawal == ''): ?>
-                                                    <span class="badge badge-danger">Belum upload</span>
+                                                    <?php if ($up1->status_ajuan == 'pending'): ?>
+                                                    <span class="badge badge-warning">PENDING</span>
                                                     <?php else: ?>
-                                                    <a class="mx-1 my-1 btn btn-sm btn-outline-primary"
-                                                        href="<?=base_url("simta/ujianproposal/download_proposalawal/$up1->id_ujianproposal");?>">
-                                                        <span class="fe fe-download-cloud fe-16 align-middle"></span>
-                                                    </a>
+                                                    <?php if ($up1->status_ajuan == 'diterima') {?>
+                                                    <span class="badge badge-success"><?=$up1->status_ajuan?></span>
+                                                    <?php } else {?>
+                                                    <?php } if ($up1->status_ajuan == 'ditolak') {?>
+                                                    <span class="badge badge-danger"><?=$up1->status_ajuan?></span>
+                                                    <?php }?>
                                                     <?php endif; ?>
                                                 </td>
 
@@ -110,14 +130,14 @@
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <a class="dropdown-item"
-                                                            href="<?=base_url("simta/ujianproposal/editstatus/$up1->id_ujianproposal");?>">Edit
-                                                            Status</a>
-                                                        <a class="dropdown-item"
-                                                            href="<?=base_url("simta/ujianproposal/edit/$up1->id_ujianproposal");?>">Edit
-                                                            Pendaftaran</a>
+                                                            href="<?=base_url("simta/ujianproposal/edit/$up1->id_ujianproposal");?>">
+                                                            Pengaturan Jadwal</a>
                                                         <a class="dropdown-item"
                                                             href="<?=base_url("simta/ujianproposal/tambahpengujiujianproposal/$up1->id_ujianproposal");?>">
                                                             Tambah Dosen Penguji</a>
+                                                        <a class="dropdown-item"
+                                                            href="<?=base_url("simta/ujianproposal/editstatus/$up1->id_ujianproposal");?>">
+                                                            Penilaian</a>
                                                             <a class="dropdown-item"
                                                             href="<?=base_url("simta/ujianproposal/detail/$up1->id_ujianproposal");?>">Detail</a>
                                                         <?php if(has_permission('admin')) : ?> <form method="POST"
@@ -144,8 +164,8 @@
                                                 </td>
                                                 <td><?=$up2->nama_judul?></td>
                                                 <td>
-                                                    <?php if ($up2->status_up == ''): ?>
-                                                    <span class="badge badge-info">DIAJUKAN</span>
+                                                    <?php if ($up2->status_up == 'DIAJUKAN'): ?>
+                                                    <span class="badge badge-info"><?=$up2->status_up?></span>
                                                     <?php else: ?>
                                                     <?php if ($up2->status_up == 'LULUS') {?>
                                                     <span class="badge badge-success"><?=$up2->status_up?></span>
@@ -158,13 +178,15 @@
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <?php if ($up2->proposalawal == ''): ?>
-                                                    <span class="badge badge-danger">Belum upload</span>
+                                                    <?php if ($up2->status_ajuan == ''): ?>
+                                                    <span class="badge badge-warning">PENDING</span>
                                                     <?php else: ?>
-                                                    <a class="mx-1 my-1 btn btn-sm btn-outline-primary"
-                                                        href="<?=base_url("simta/ujianproposal/download_proposalawal/$up2->id_ujianproposal");?>">
-                                                        <span class="fe fe-download-cloud fe-16 align-middle"></span>
-                                                    </a>
+                                                    <?php if ($up2->status_ajuan == 'diterima') {?>
+                                                    <span class="badge badge-success"><?=$up2->status_ajuan?></span>
+                                                    <?php } else {?>
+                                                    <?php } if ($up2->status_ajuan == 'ditolak') {?>
+                                                    <span class="badge badge-danger"><?=$up2->status_ajuan?></span>
+                                                    <?php }?>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
@@ -233,8 +255,7 @@
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <a class="dropdown-item"
-                                                            href="<?=base_url("simta/ujianproposal/editstatus/$up3->id_ujianproposal");?>">Edit
-                                                        Status</a>
+                                                            href="<?=base_url("simta/ujianproposal/editstatus/$up3->id_ujianproposal");?>">Penilaian</a>
                                                         <a class="dropdown-item"
                                                             href="<?=base_url("simta/ujianproposal/detail/$up3->id_ujianproposal");?>">Detail</a>
                                                     </div>
@@ -265,4 +286,5 @@
     </div>
     <!-- .container-fluid -->
 </main>
+
 <?php echo $this->include('simta/simta_partial/dashboard/footer'); ?>

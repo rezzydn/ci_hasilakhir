@@ -5,33 +5,11 @@
 <?php else : ?>
 <?php echo $this->include('simta/simta_partial/dashboard/side_menu') ?>
 <?php endif; ?>
-
 <main role="main" class="main-content">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h2 class="mt-2 page-title">Halaman Pendaftaran Seminar Hasil</h2>
-                    </div>
-                <?php if(has_permission('admin') || has_permission('dosen')): ?>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right mb-0">
-                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
-                            <li class="breadcrumb-item active">SIMTA</a></li>
-                            <li class="breadcrumb-item active">Pendaftaran Seminar Hasil</li>
-                        </ol>
-                    </div>
-                    <?php elseif(has_permission('mahasiswa')): ?>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right mb-0">
-                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
-                            <li class="breadcrumb-item active">SIMTA</a></li>
-                            <li class="breadcrumb-item active">Pendaftaran Seminar Hasil</li>
-                        </ol>
-                    </div>
-                    <?php endif; ?>
-                </div>
+                <h2 class="page-title">Form Tambah Data Ujian Proposal</h2>
                 <div class="row my-4">
                     <div class="col">
                         <div class="card shadow mb-4">
@@ -40,11 +18,11 @@
                             </div>
                             <div class="card-body">
                                 <form method="POST" enctype="multipart/form-data"
-                                    action="<?=base_url("simta/seminarhasil/store")?>"> 
+                                    action="<?=base_url("simta/ujianproposal/simpanmahasiswa")?>"> 
                                     <?=csrf_field();?>
 
                                     <div class="form-group mb-3">
-                                        <label for="simple-select2">Nama Mahasiswa<span class="text-danger">*</span></label>
+                                        <label for="simple-select2">Nama Mahasiswa</label>
                                         <select name="id_mhs"
                                             class="form-control select2 <?= ($validation->hasError('id_mhs')) ? 'is-invalid' : ''; ?>">
                                             <option>Pilih Nama Mahasiswa</option>
@@ -61,7 +39,7 @@
                                         <?php }?>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="example-select">Nama Dosen Pembimbing<span class="text-danger">*</span></label>
+                                        <label for="example-select">Nama Dosen Penguji</label>
                                         <select name="id_staf"
                                             class="form-control select2 <?= ($validation->hasError('id_staf')) ? 'is-invalid' : ''; ?>">
                                             <option>Pilih Dosen Pembimbing</option>
@@ -75,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Judul Tugas Akhir<span class="text-danger">*</span></label>
+                                        <label for="address-wpalaceholder">Judul Tugas Akhir</label>
                                         <input type="text" id="address-wpalaceholder" name="nama_judul"
                                             class="form-control" placeholder="Copy Paste Proposal Tugas Akhir" />
                                         <!-- Error Validation -->
@@ -86,67 +64,40 @@
                                         <?php }?>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Abstrak<span class="text-danger">*</span></label>
-                                        <input type="text" id="address-wpalaceholder" name="abstrak"
+                                        <label for="address-wpalaceholder">Deskripsi Sistem</label>
+                                        <input type="text" id="address-wpalaceholder" name="deskripsi_sistem"
                                             class="form-control" placeholder="Copy Paste Proposal Tugas Akhir" />
                                         <!-- Error Validation -->
-                                        <?php if ($validation->getError('abstrak')) {?>
+                                        <?php if ($validation->getError('deskripsi_sistem')) {?>
                                         <div class='alert alert-danger mt-2'>
-                                            <?=$error = $validation->getError('abstrak');?>
+                                            <?=$error = $validation->getError('deskripsi_sistem');?>
                                         </div>
                                         <?php }?>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Tanggal Ujian<span class="text-danger">*</span></label>
-                                        <input type="date" id="address-wpalaceholder" name="jadwal_semhas"
+                                        <label for="address-wpalaceholder">Tanggal Ujian</label>
+                                        <input type="datetime" id="address-wpalaceholder" name="tanggal"
                                             class="form-control" placeholder="" />
                                         <!-- Error Validation -->
-                                        <?php if ($validation->getError('jadwal_semhas')) {?>
+                                        <?php if ($validation->getError('tanggal')) {?>
                                         <div class='alert alert-danger mt-2'>
-                                            <?=$error = $validation->getError('jadwal_semhas');?>
+                                            <?=$error = $validation->getError('tanggal');?>
                                         </div>
                                         <?php }?>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="customFile">Dokumen Tugas Akhir<span class="text-danger">*</span></label>
+                                        <label for="customFile">Proposal</label>
                                         <input type="file"
-                                            class="form-control <?= ($validation->hasError('proposal_seminarhasil')) ? 'is-invalid' : ''; ?>"
-                                            name="proposal_seminarhasil">
+                                            class="form-control <?= ($validation->hasError('proposalawal')) ? 'is-invalid' : ''; ?>"
+                                            name="proposalawal">
                                         <div class="invalid-feedback">
-                                            <?= $validation->getError('proposal_seminarhasil'); ?>
-                                        </div>
-                                        <div class="text-danger">
-                                            * File berupa pdf (Max. 5Mb)
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="customFile">Persetujuan Dosen Pembimbing<span class="text-danger">*</span></label>
-                                        <input type="file"
-                                            class="form-control <?= ($validation->hasError('persetujuan_dosen')) ? 'is-invalid' : ''; ?>"
-                                            name="persetujuan_dosen">
-                                        <div class="invalid-feedback">
-                                            <?= $validation->getError('persetujuan_dosen'); ?>
-                                        </div>
-                                        <div class="text-danger">
-                                            * File berupa pdf (Max. 5Mb)
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="customFile">Berita Acara<span class="text-danger">*</span></label>
-                                        <input type="file"
-                                            class="form-control <?= ($validation->hasError('berita_acara')) ? 'is-invalid' : ''; ?>"
-                                            name="berita_acara">
-                                        <div class="invalid-feedback">
-                                            <?= $validation->getError('berita_acara'); ?>
-                                        </div>
-                                        <div class="text-danger">
-                                            * File berupa pdf (Max. 5Mb)
+                                            <?= $validation->getError('proposalawal'); ?>
                                         </div>
                                     </div>
                                     <button class="btn btn-primary" type="submit">
                                         Tambah
                                     </button>
-                                    <a href="<?=base_url('simta/seminarhasil');?>" class="btn btn-warning">Kembali</a>
+                                    <a href="<?=base_url('simta/ujianproposal');?>" class="btn btn-warning">Kembali</a>
                                 </form>
                             </div>
                             <!-- /.card-body -->

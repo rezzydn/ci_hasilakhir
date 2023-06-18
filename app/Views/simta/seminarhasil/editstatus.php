@@ -10,7 +10,28 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-2 page-title">Halaman <?=$title?></h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="mt-2 page-title">Halaman Penilaian Seminar Hasil</h2>
+                    </div>
+                <?php if(has_permission('admin') || has_permission('dosen')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Penilaian Seminar Hasil</li>
+                        </ol>
+                    </div>
+                    <?php elseif(has_permission('mahasiswa')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Penilaian Seminar Hasil</li>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
+                </div>
                 <div class="row my-4">
                     <!-- Small table -->
                     <div class="col">
@@ -24,7 +45,7 @@
                                     enctype="multipart/form-data">
                                     <?= csrf_field(); ?>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Nilai Total</label>
+                                        <label for="address-wpalaceholder">Nilai Total<span class="text-danger">*</span></label>
                                         <input type="text" id="address-wpalaceholder" name="nilai_total"
                                             class="form-control" placeholder="Masukkan Nilai"
                                             value="<?= $seminarhasil->nilai_total ?>" />
@@ -37,7 +58,7 @@
                                     </div>
                                     
                                     <div class="form-group mb-3">
-                                        <label for="simple-select2">Status</label>
+                                        <label for="simple-select2">Status<span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="status_sh"
                                             id="simple-select2">
                                             <option value="">Pilih Status</option>
@@ -55,7 +76,7 @@
 
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Catatan</label>
+                                        <label for="address-wpalaceholder">Catatan<span class="text-danger">*</span></label>
                                         <input type="text" id="address-wpalaceholder" name="catatan"
                                             class="form-control" placeholder="Masukkan Catatan"
                                             value="<?= $seminarhasil->catatan ?>" />

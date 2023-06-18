@@ -27,8 +27,20 @@ class HasilAkhirController extends BaseController
         return view('hasilakhir/create', $data);
     }
 
+
     public function store()
     {
+        $bobotpenilaian = $this->bobotpenilaian->getBobot();
+        $bobot_ujianproposal = ($bobotpenilaian->bobot_ujianproposal) / 100;
+        $bobot_seminarhasil = ($bobotpenilaian->bobot_seminarhasil) / 100;
+        $bobot_ujianta = ($bobotpenilaian->bobot_ujianta) / 100;
+
+        $nilai_ujianproposal = $nilai_ujianproposal * ($bobot_ujianproposal);
+        $nilai_seminarhasil = $nilai_seminarhasil * ($bobot_seminarhasil);
+        $nilai_ujianta = $nilai_ujianta * ($bobot_ujianta);
+
+        $hasilakhir = $nilai_ujianproposal + $nilai_seminarhasil + $nilai_ujianta;
+
         $model = new SimtaHasilakhirModel();
 
         $data = [
@@ -37,10 +49,11 @@ class HasilAkhirController extends BaseController
             'id_ujianta' => $this->request->getVar('id_ujianta'),
             'id_mhs' => $this->request->getVar('id_mhs'),
             'id_staf' => $this->request->getVar('id_staf'),
-            'hasil_akhir' => $this->request->getVar('hasil_akhir'),
+            'hasil_akhir' => $hasilakhir,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
+        
 
         $model->insert($data);
 

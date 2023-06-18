@@ -10,7 +10,28 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-2 page-title">Halaman <?=$title?></h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="mt-2 page-title">Halaman Edit Dosen Penguji Ujian Proposal</h2>
+                    </div>
+                <?php if(has_permission('admin') || has_permission('dosen')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Edit Dosen Penguji Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php elseif(has_permission('mahasiswa')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Edit Dosen Penguji Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
+                </div>
                 <div class="row my-4">
                     <!-- Small table -->
                     <div class="col">
@@ -25,19 +46,22 @@
                                     enctype="multipart/form-data">
                                     <?= csrf_field(); ?>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Nama Penguji</label>
-                                        <input type="text" id="address-wpalaceholder" name="nama_penguji"
-                                            class="form-control" placeholder="Masukkan Nama penguji"
-                                            value="<?= $pengujiujianproposal->nama_penguji ?>" />
+                                        <label for="simple-select2">Nama Penguji<span class="text-danger">*</span></label>
+                                        <select class="form-control select2" name="nama_penguji"
+                                            id="simple-select2">
+                                            <option value="">Pilih Nama Penguji</option>
+                                            <option value="PENGUJI 1"
+                                                <?= $pengujiujianproposal->nama_penguji == 'PENGUJI 1' ? 'selected' : ''?>>
+                                                PENGUJI 1</option>
+                                            <option value="PENGUJI 2"
+                                                <?= $pengujiujianproposal->nama_penguji == 'PENGUJI 2' ? 'selected' : ''?>>
+                                                PENGUJI 2</option>
+                                        </select>
                                         <!-- Error Validation -->
-                                        <?php if ($validation->getError('nama_penguji')) { ?>
-                                        <div class='alert alert-danger mt-2'>
-                                            <?= $error = $validation->getError('nama_penguji'); ?>
-                                        </div>
-                                        <?php } ?>
+
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="example-select">Nama Dosen Penguji</label>
+                                        <label for="example-select">Nama Dosen Penguji<span class="text-danger">*</span></label>
                                         <select name="id_staf"
                                             class="form-control select2 <?= ($validation->hasError('id_staf')) ? 'is-invalid' : ''; ?>">
                                             <option>Pilih Dosen Penguji</option>
@@ -55,7 +79,7 @@
                                     <button class="btn btn-primary" type="submit">
                                         Simpan
                                     </button>
-                                    <a href="<?=base_url('simta/ujianproposal/detail');?>" class="btn btn-warning">Kembali</a>
+                                    <a href="<?=base_url('simta/ujianproposal');?>" class="btn btn-warning">Kembali</a>
                                 </form>
                             </div>
                             <!-- /.card-body -->

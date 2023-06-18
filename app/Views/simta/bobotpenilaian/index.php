@@ -12,14 +12,14 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h2 class="mt-2 page-title">Halaman Penilaian Ujian Tugas Akhir</h2>
+                        <h2 class="mt-2 page-title">Halaman Bobot Penilaian</h2>
                     </div>
                 <?php if(has_permission('admin') || has_permission('dosen')): ?>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right mb-0">
                             <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
                             <li class="breadcrumb-item active">SIMTA</a></li>
-                            <li class="breadcrumb-item active">Penilaian Ujian Tugas Akhir</li>
+                            <li class="breadcrumb-item active">Bobot Penilaian</li>
                         </ol>
                     </div>
                     <?php elseif(has_permission('mahasiswa')): ?>
@@ -27,7 +27,7 @@
                         <ol class="breadcrumb float-sm-right mb-0">
                             <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
                             <li class="breadcrumb-item active">SIMTA</a></li>
-                            <li class="breadcrumb-item active">Penilaian Ujian Tugas Akhir</li>
+                            <li class="breadcrumb-item active">Bobot Penilaian</li>
                         </ol>
                     </div>
                     <?php endif; ?>
@@ -41,56 +41,49 @@
                             </div>
                             <div class="card-body">
                                 <!-- table -->
-                                <form method="POST" action="<?= base_url('simta/ujianta/updatestatus/' . $ujianta->id_ujianta); ?>"
+                                <form method="POST" action="<?= base_url('simta/bobotpenilaian/update/' . $bobotpenilaian->id_bobot); ?>"
                                     enctype="multipart/form-data">
                                     <?= csrf_field(); ?>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Nilai Total<span class="text-danger">*</span></label>
-                                        <input type="text" id="address-wpalaceholder" name="nilai_ut"
-                                            class="form-control" placeholder="Masukkan Nilai"
-                                            value="<?= $ujianta->nilai_ut ?>" />
+                                        <label for="address-wpalaceholder">Bobot Penilaian Ujian <span class="text-danger">*</span></label>
+                                        <input type="text" id="address-wpalaceholder" name="bobot_ujianproposal"
+                                            class="form-control" placeholder="Contoh : 10%"
+                                            value="<?= $bobotpenilaian->bobot_ujianproposal ?>" />
                                         <!-- Error Validation -->
-                                        <?php if ($validation->getError('nilai_ut')) { ?>
+                                        <?php if ($validation->getError('bobot_ujianproposal')) { ?>
                                         <div class='alert alert-danger mt-2'>
-                                            <?= $error = $validation->getError('nilai_ut'); ?>
+                                            <?= $error = $validation->getError('bobot_ujianproposal'); ?>
                                         </div>
                                         <?php } ?>
                                     </div>
-                                    
                                     <div class="form-group mb-3">
-                                        <label for="simple-select2">Hasil<span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="status_ut"
-                                            id="simple-select2">
-                                            <option value="">Pilih Hasil</option>
-                                            <option value="LULUS"
-                                                <?= $ujianta->status_ut == 'LULUS' ? 'selected' : ''?>>
-                                                LULUS</option>
-                                            <option value="LULUS DENGAN REVISI"
-                                                <?= $ujianta->status_ut == 'LULUS DENGAN REVISI' ? 'selected' : ''?>>
-                                                LULUS DENGAN REVISI</option>
-                                            <option value="GAGAL"
-                                                <?= $ujianta->status_ut == 'GAGAL' ? 'selected' : ''?>>
-                                                GAGAL</option>
-                                        </select>
+                                        <label for="address-wpalaceholder">Bobot Penilaian Seminar Hasil<span class="text-danger">*</span></label>
+                                        <input type="text" id="address-wpalaceholder" name="bobot_seminarhasil"
+                                            class="form-control" placeholder="Contoh : 10%"
+                                            value="<?= $bobotpenilaian->bobot_seminarhasil ?>" />
                                         <!-- Error Validation -->
-
+                                        <?php if ($validation->getError('bobot_seminarhasil')) { ?>
+                                        <div class='alert alert-danger mt-2'>
+                                            <?= $error = $validation->getError('bobot_seminarhasil'); ?>
+                                        </div>
+                                        <?php } ?>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Catatan</label>
-                                        <input type="text" id="address-wpalaceholder" name="catatan"
-                                            class="form-control" placeholder="Masukkan Catatan"
-                                            value="<?= $ujianta->catatan ?>" />
+                                        <label for="address-wpalaceholder">Bobot Penilaian Ujian Tugas Akhir<span class="text-danger">*</span></label>
+                                        <input type="text" id="address-wpalaceholder" name="bobot_ujianta"
+                                            class="form-control" placeholder="Contoh : 10%"
+                                            value="<?= $bobotpenilaian->bobot_ujianta ?>" />
                                         <!-- Error Validation -->
-                                        <?php if ($validation->getError('catatan')) { ?>
+                                        <?php if ($validation->getError('bobot_ujianta')) { ?>
                                         <div class='alert alert-danger mt-2'>
-                                            <?= $error = $validation->getError('catatan'); ?>
+                                            <?= $error = $validation->getError('bobot_ujianta'); ?>
                                         </div>
                                         <?php } ?>
                                     </div>
                                     <button class="btn btn-primary" type="submit">
                                         Simpan
                                     </button>
-                                    <a href="<?=base_url('simta/ujianta');?>" class="btn btn-warning">Kembali</a>
+                                    <a href="<?=base_url('simta/bobotpenilaian');?>" class="btn btn-warning">Kembali</a>
                                 </form>
                             </div>
                             <!-- /.card-body -->

@@ -1,117 +1,120 @@
-<?php echo $this->include('simta/simta_partial/dashboard/header');?>
-<?php echo $this->include('simta/simta_partial/dashboard/top_menu');?>
-<?php if(has_permission('admin')) : ?>
+<?php echo $this->include('simta/simta_partial/dashboard/header'); ?>
+<?php echo $this->include('simta/simta_partial/dashboard/top_menu'); ?>
+<?php if (has_permission('admin')): ?>
 <?php echo $this->include('master_partial/dashboard/side_menu') ?>
-<?php else : ?>
+<?php else: ?>
 <?php echo $this->include('simta/simta_partial/dashboard/side_menu') ?>
-<?php endif; ?>
+<?php endif;?>
+
 <main role="main" class="main-content">
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="page-title">Form Tambah Data Ujian Proposal</h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="mt-2 page-title">Halaman Pengaturan Jadwal Ujian Proposal</h2>
+                    </div>
+                    <?php if(has_permission('admin') || has_permission('dosen')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Pengaturan Jadwal Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php elseif(has_permission('mahasiswa')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Pengaturan Jadwal Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
+                </div>
                 <div class="row my-4">
+                    <!-- Small table -->
                     <div class="col">
                         <div class="card shadow mb-4">
                             <div class="card-header">
-                                <strong class="card-title"></strong>
+
                             </div>
                             <div class="card-body">
+                                <!-- table -->
+                                <?php $validation = \Config\Services::validation();?>
                                 <form method="POST" enctype="multipart/form-data"
-                                    action="<?=base_url("simta/ujianproposal/store")?>"> 
-                                    <?=csrf_field();?>
+                                    action="<?=base_url("simta/ujianproposal/update/" . $ujianproposal->id_ujianproposal)?>">
+                                    <?=csrf_field(); ?>
+                                    <div class="form-group mb-3">
+                                        <label for="ruang_sempro">Ruangan Ujian<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" id="ruang_sempro" name="ruang_sempro"
+                                            class="form-control <?=($validation->hasError('ruang_sempro')) ? 'is-invalid' : ''?>"
+                                            value="<?=$ujianproposal->ruang_sempro?>" />
+                                        <!-- Error Validation -->
+                                        <div class="invalid-feedback">
+                                            <?=$validation->getError('ruang_sempro');?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="tanggal">Tanggal Ujian<span class="text-danger">*</span></label>
+                                        <input type="date" id="tanggal" name="tanggal"
+                                            class="form-control <?=($validation->hasError('tanggal')) ? 'is-invalid' : ''?>"
+                                            value="<?=date('Y-m-d',round($ujianproposal->tanggal/1000))?>" />
+                                        <!-- Error Validation -->
+                                        <div class="invalid-feedback">
+                                            <?=$validation->getError('tanggal');?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="jam_mulai">Jam Mulai<span class="text-danger">*</span></label>
+                                        <input type="time" id="jam_mulai" name="jam_mulai"
+                                            class="form-control <?=($validation->hasError('jam_mulai')) ? 'is-invalid' : ''?>"
+                                            value="<?=date('H:i', round($ujianproposal->jam_mulai/1000))?>" />
+                                        <!-- Error Validation -->
+                                        <div class="invalid-feedback">
+                                            <?=$validation->getError('jam_mulai');?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="jam_selesai">Jam Selesai<span class="text-danger">*</span></label>
+                                        <input type="time" id="jam_selesai" name="jam_selesai"
+                                            class="form-control <?=($validation->hasError('jam_selesai')) ? 'is-invalid' : ''?>"
+                                            value="<?=date('H:i', round($ujianproposal->jam_selesai/1000))?>" />
+                                        <!-- Error Validation -->
+                                        <div class="invalid-feedback">
+                                            <?=$validation->getError('jam_selesai');?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="simple-select2">Hasil<span class="text-danger">*</span></label>
+                                        <select class="form-control select2" name="status_ajuan" id="simple-select2">
+                                            <option value="">Pilih Hasil</option>
+                                            <option value="diterima"
+                                                <?= $ujianproposal->status_ajuan == 'diterima' ? 'selected' : ''?>>
+                                                DITERIMA</option>
+                                            <option value="pending"
+                                                <?= $ujianproposal->status_ajuan == 'pending' ? 'selected' : ''?>>
+                                                PENDING</option>
+                                            <option value="ditolak"
+                                                <?= $ujianproposal->status_ajuan == 'ditolak' ? 'selected' : ''?>>
+                                                DITOLAK</option>
+                                        </select>
+                                        <!-- Error Validation -->
 
-                                    <div class="form-group mb-3">
-                                        <label for="simple-select2">Nama Mahasiswa</label>
-                                        <select name="id_mhs"
-                                            class="form-control select2 <?= ($validation->hasError('id_mhs')) ? 'is-invalid' : ''; ?>">
-                                            <option>Pilih Nama Mahasiswa</option>
-                                            <?php foreach ($mahasiswa as $mhs) : ?>
-                                            <option value="<?= $mhs->id_mhs ?>"><?= $mhs->nama ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <!-- Error Validation -->
-                                        <?php if ($validation->getError('id_mhs')) {?>
-                                        <div class='alert alert-danger mt-2'>
-                                            <?=$error = $validation->getError('id_mhs');?>
-                                        </div>
-                                        <?php }?>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="example-select">Nama Dosen Penguji</label>
-                                        <select name="id_staf"
-                                            class="form-control select2 <?= ($validation->hasError('id_staf')) ? 'is-invalid' : ''; ?>">
-                                            <option>Pilih Dosen Pembimbing</option>
-                                            <?php foreach ($staf as $s) : ?>
-                                            <option value="<?= $s->id_staf ?>"><?= $s->nama ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            <?= $validation->getError('id_staf'); ?>
-                                        </div>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Judul Tugas Akhir</label>
-                                        <input type="text" id="address-wpalaceholder" name="nama_judul"
-                                            class="form-control" placeholder="Copy Paste Proposal Tugas Akhir" />
-                                        <!-- Error Validation -->
-                                        <?php if ($validation->getError('nama_judul')) {?>
-                                        <div class='alert alert-danger mt-2'>
-                                            <?=$error = $validation->getError('nama_judul');?>
-                                        </div>
-                                        <?php }?>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Abstrak</label>
-                                        <input type="text" id="address-wpalaceholder" name="abstrak"
-                                            class="form-control" placeholder="Copy Paste Proposal Tugas Akhir" />
-                                        <!-- Error Validation -->
-                                        <?php if ($validation->getError('abstrak')) {?>
-                                        <div class='alert alert-danger mt-2'>
-                                            <?=$error = $validation->getError('abstrak');?>
-                                        </div>
-                                        <?php }?>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="address-wpalaceholder">Tanggal Ujian</label>
-                                        <input type="datetime" id="address-wpalaceholder" name="tanggal"
-                                            class="form-control" placeholder="Contoh : 01-01-2000 10:00:00" />
-                                        <!-- Error Validation -->
-                                        <?php if ($validation->getError('tanggal')) {?>
-                                        <div class='alert alert-danger mt-2'>
-                                            <?=$error = $validation->getError('tanggal');?>
-                                        </div>
-                                        <?php }?>
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="customFile">Dokumen Tugas Akhir </label>
-                                        <input type="file"
-                                            class="form-control <?= ($validation->hasError('proposalawal')) ? 'is-invalid' : ''; ?>"
-                                            name="proposalawal">
-                                        <div class="invalid-feedback">
-                                            <?= $validation->getError('proposalawal'); ?>
-                                        </div>
                                     </div>
                                     <button class="btn btn-primary" type="submit">
-                                        Tambah
+                                        Edit
                                     </button>
                                     <a href="<?=base_url('simta/ujianproposal');?>" class="btn btn-warning">Kembali</a>
                                 </form>
                             </div>
-                            <!-- /.card-body -->
                         </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- end section -->
-            </div>
-            <!-- /.col-12 col-lg-10 col-xl-10 -->
-        </div>
-        <!-- .row -->
-    </div>
-    <!-- .container-fluid -->
+                    </div> <!-- simple table -->
+                </div> <!-- end section -->
+            </div> <!-- .col-12 -->
+        </div> <!-- .row -->
+    </div> <!-- .container-fluid -->
 </main>
+
 <?php echo $this->include('simta/simta_partial/dashboard/footer'); ?>

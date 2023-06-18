@@ -77,4 +77,34 @@ class SimtaHasilakhirModel extends Model
 
         return $query->getResultArray();
     }
+
+    public function getTotalNilaiUjianProposal($id_hasilakhir){
+        $builder = $this->db->table('simta_hasilakhir');
+        $builder->selectSum('nilai_ujianproposal');
+        $query = $builder->get()->getResult(); 
+
+        foreach ($query as $key => $value) {
+            return $value->nilai_ujianproposal;
+        }
+    }
+    
+    public function getTotalNilaiSeminarHasil($id_hasilakhir){
+        $builder = $this->db->table('simta_hasilakhir');
+        $builder->selectSum('nilai_seminarhasil');
+        $query = $builder->get()->getResult(); 
+
+        foreach ($query as $key => $value) {
+            return $value->nilai_seminarhasil;
+        }
+    }
+
+    public function getTotalNilaiUjianTA($id_hasilakhir){
+        $builder = $this->db->table('simta_hasilakhir');
+        $builder->selectSum('nilai_ujianta');
+        $query = $builder->get()->getResult(); 
+
+        foreach ($query as $key => $value) {
+            return $value->nilai_ujianta;
+        }
+    }
 }

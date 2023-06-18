@@ -10,7 +10,28 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h2 class="mb-2 page-title">Halaman <?=$title?></h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="mt-2 page-title">Halaman Detail Ujian Proposal</h2>
+                    </div>
+                <?php if(has_permission('admin') || has_permission('dosen')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Detail Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php elseif(has_permission('mahasiswa')): ?>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right mb-0">
+                            <li class="breadcrumb-item"><a href="<?= base_url('simta') ?>">Dashboard</a></li>
+                            <li class="breadcrumb-item active">SIMTA</a></li>
+                            <li class="breadcrumb-item active">Detail Ujian Proposal</li>
+                        </ol>
+                    </div>
+                    <?php endif; ?>
+                </div>
                 <div class="row my-3">
                     <div class="col-md-6">
                         <div class="card shadow">
@@ -44,27 +65,35 @@
                                 <th>Nama Judul Tugas Akhir</th>
                                 <td><?=$ujianproposal->nama_judul?></td>
                             </tr>
-                            </tr>
+                            <tr>
                                 <th>Abstrak</th>
                                 <td><?=$ujianproposal->abstrak?></td>
                             </tr>
-                            </tr>
+                            <tr>
                                 <th>Jadwal Ujian</th>
-                                <td><?=$ujianproposal->tanggal?></td>
+                                <td><?=date('d M Y', round($ujianproposal->tanggal/1000))?></td>
                             </tr>
-                            </tr>
+                            <tr>
                                 <th>Ruangan Ujian</th>
                                 <td><?=$ujianproposal->ruang_sempro?></td>
                             </tr>
+                            <tr>
+                                <th>Waktu Ujian</th>
+                                <td><?=date('H:i', round($ujianproposal->jam_mulai/1000))?> WIB</td>
                             </tr>
+                            <tr>
+                                <th>Jam Selesai</th>
+                                <td><?=date('H:i', round($ujianproposal->jam_selesai/1000))?> WIB</td></td>
+                            </tr>
+                            <tr>
                                 <th>Status Ajuan</th>
                                 <td><?=$ujianproposal->status_ajuan?></td>
                             </tr>
-                            </tr>
+                            <tr>
                                 <th>Status Hasil</th>
                                 <td><?=$ujianproposal->status_up?></td>
                             </tr>
-                            </tr>
+                            <tr>
                                 <th>Catatan</th>
                                 <td><?=$ujianproposal->catatan?></td>
                             </tr>
@@ -85,7 +114,9 @@
                                                 <th>No</th>
                                                 <th>Nama</th>
                                                 <th>Nama Dosen</th>
+                                                <?php if(has_permission('admin')) : ?>
                                                 <th>Action</th>
+                                                <?php endif; ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -100,6 +131,7 @@
                                                     <?php foreach($staf as $s) {
                                                     echo ($pup->id_staf == $s->id_staf) ? $s->nama : ''; } ?>
                                                 </td>
+                                                <?php if(has_permission('admin')) : ?>
                                                 <td>
                                                     <button class="btn btn-sm dropdown-toggle more-horizontal"
                                                         type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -120,16 +152,52 @@
                                                     </div>
                                                 </td>
                                                 <?php endif; ?>
+                                                <?php endif; ?>
                                             </tr>
                                             <?php endforeach?>
                                         </tbody>
-                                </table>
+                                        <div class="col-md-6">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5>Proposal Tugas Akhir</h5>
+                                <p>
+                                    <?php if($ujianproposal->proposalawal == null) : ?>
+                                    <span class="badge badge-primary text-uppercase">belum diupload</span>
+                                    <?php else : ?>
+                                    <a href="<?= base_url('simta/ujianproposal/download_proposalawal/' . $ujianproposal->id_ujianproposal); ?>">Download</a>
+                                    <?php endif; ?>
+                                </p>
+                                <h5>Transkrip Nilai</h5>
+                                <p>
+                                    <?php if($ujianproposal->transkrip_nilai == null) : ?>
+                                    <span class="badge badge-primary text-uppercase">belum diupload</span>
+                                    <?php else : ?>
+                                    <a
+                                        href="<?= base_url('simta/ujianproposal/download_transkripnilai/' . $ujianproposal->id_ujianproposal); ?>">Download</a>
+                                    <?php endif; ?>
+                                </p>
+                                <h5>Revisi Proposal</h5>
+                                <p>
+                                    <?php if($ujianproposal->revisi_proposal == null) : ?>
+                                    <span class="badge badge-primary text-uppercase">belum diupload</span>
+                                    <?php else : ?>
+                                    <a
+                                        href="<?= base_url('simta/ujianproposal/download_revisi_proposal/' . $ujianproposal->id_ujianproposal); ?>">Download</a>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </table>
+                    </div>
                                 <a href="<?=base_url('simta/ujianproposal');?>" class="btn btn-warning">Kembali</a>
                             </div> <!-- end section -->
                         </div> <!-- .col-12 -->
                     </div>
+                    
                 </div>
             </div>
+            
         </div> <!-- .row -->
     </div> <!-- .container-fluid -->
 </main>
